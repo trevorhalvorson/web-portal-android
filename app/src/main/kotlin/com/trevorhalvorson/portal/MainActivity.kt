@@ -1,7 +1,7 @@
 package com.trevorhalvorson.portal
 
 import android.annotation.SuppressLint
-import android.support.v7.app.AppCompatActivity
+import android.app.Activity
 import android.os.Bundle
 import android.view.KeyEvent
 import android.view.View
@@ -12,7 +12,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 import java.net.URI
 
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : Activity() {
 
     @SuppressLint("SetJavaScriptEnabled")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -20,9 +20,36 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_FULLSCREEN
 
-        web_view.webViewClient = CustomWebViewClient()
+        web_view.webViewClient = object : WebViewClient() {
+            override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?):
+                    Boolean {
+                if (!BuildConfig.ALLOW_BROWSING) {
+                    val originalHost = URI(BuildConfig.URL).host
+                    val requestedHost = URI(request!!.url.toString()).host
+
+                    return !originalHost.contentEquals(requestedHost)
+                }
+                return false
+            }
+        }
+
         web_view.settings.javaScriptEnabled = true
-        web_view.loadUrl(BuildConfig.URL)
+        web_view.settings.builtInZoomControls = true
+        web_view.settings.loadWithOverviewMode = true
+
+        if (savedInstanceState == null) {
+            web_view.loadUrl(BuildConfig.URL)
+        }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle?) {
+        super.onSaveInstanceState(outState)
+        web_view.saveState(outState)
+    }
+
+    override fun onRestoreInstanceState(savedInstanceState: Bundle?) {
+        super.onRestoreInstanceState(savedInstanceState)
+        web_view.restoreState(savedInstanceState)
     }
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent): Boolean {
@@ -30,19 +57,6 @@ class MainActivity : AppCompatActivity() {
             web_view.goBack()
             return true
         }
-        return false
-    }
-}
-
-private class CustomWebViewClient : WebViewClient() {
-
-    override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean {
-        if (!BuildConfig.ALLOW_BROWSING) {
-            val originalHost = URI(BuildConfig.URL).host
-            val requestedHost = URI(request!!.url.toString()).host
-
-            return !originalHost.contentEquals(requestedHost)
-        }
-        return false
+        return super.onKeyDown(keyCode, event)
     }
 }
