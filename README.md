@@ -13,7 +13,7 @@ Project Properties:
 
 Build an unsigned release APK:
 
-`./gradlew assembleRelease -Purl='"https://trevorhalvorson.com"' -PallowBrowsing=true -PversionCode=1`
+`./gradlew assembleRelease -Purl='"https://trevorhalvorson.com"' -PallowBrowsing=true -PversionCode=1 -PversionName='1.0.0'`
 
 ### Signing
 

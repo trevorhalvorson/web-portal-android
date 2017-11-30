@@ -12,6 +12,10 @@ def getVersionCode = { ->
     return project.hasProperty('versionCode') ? versionCode.toInteger() : 1
 }
 
+def getVersionName = { ->
+    return project.hasProperty('versionName') ? versionName : "1.0.0"
+}
+
 task(configureApp) {
     url = props.get("url")
     allowBrowsing = props.get("allowBrowsing")
@@ -25,7 +29,7 @@ android {
         minSdkVersion 21
         targetSdkVersion 26
         versionCode getVersionCode()
-        versionName "1.0.0"
+        versionName getVersionName()
     }
     buildTypes {
         release {
