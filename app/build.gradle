@@ -31,11 +31,20 @@ android {
         versionCode getVersionCode()
         versionName getVersionName()
     }
+    signingConfigs {
+        release {
+            storeFile file(System.getenv("KEYSTORE") ?: "keystore.jks")
+            storePassword System.getenv("KEYSTORE_PASSWORD")
+            keyAlias System.getenv("KEY_ALIAS")
+            keyPassword System.getenv("KEY_PASSWORD")
+        }
+    }
     buildTypes {
         release {
             shrinkResources true
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
 
             buildConfigField("String", "URL", "$url")
             buildConfigField("Boolean", "ALLOW_BROWSING", "$allowBrowsing")

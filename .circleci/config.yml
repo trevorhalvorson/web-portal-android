@@ -8,8 +8,11 @@ jobs:
     steps:
       - checkout
       - run:
+          name: Decode Keystore
+          command: echo $ENCODED_KEYSTORE | base64 --decode >> ${HOME}/repo/keystore.jks
+      - run:
+          name: Set KEYSTORE environment variable
+          command: echo 'export KEYSTORE=${HOME}/repo/keystore.jks' >> $BASH_ENV
+      - run:
           name: Build
           command: ./gradlew build
-      - store_artifacts: # for display in Artifacts: https://circleci.com/docs/2.0/artifacts/
-          path: app/build/outputs/apk/release/*.apk
-          destination: apks
