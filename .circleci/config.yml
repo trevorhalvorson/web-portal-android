@@ -12,7 +12,7 @@ jobs:
           command: echo $ENCODED_KEYSTORE | base64 --decode >> ${HOME}/repo/keystore.jks
       - run:
           name: Set KEYSTORE environment variable
-          command: echo 'export KEYSTORE=${HOME}/repo/keystore.jks' >> $BASH_ENV
+          command: echo 'export KEYSTORE=${HOME}/${CIRCLE_WORKING_DIRECTORY}/keystore.jks' >> $BASH_ENV
       - run:
           name: Build
           command: ./gradlew build
