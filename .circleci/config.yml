@@ -14,5 +14,14 @@ jobs:
           name: Set KEYSTORE environment variable
           command: echo 'export KEYSTORE=${HOME}/keystore.jks' >> $BASH_ENV
       - run:
-          name: Build
+          name: Build APK
           command: ./gradlew build
+      - run:
+          name: Install Mason CLI
+          command: sudo pip install git+https://git@github.com/MasonAmerica/mason-cli.git
+      - run:
+          name: Login to Mason Platform
+          command: mason login --user $MASON_USER --password $MASON_PASSWORD
+      - run:
+          name: Register APK
+          command: mason register -s apk ${HOME}/project/app/build/outputs/apk/release/app-release.apk

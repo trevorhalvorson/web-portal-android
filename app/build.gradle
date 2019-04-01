@@ -9,11 +9,11 @@ def props = project.getProperties()
 def url, allowBrowsing
 
 def getVersionCode = { ->
-    return project.hasProperty('versionCode') ? versionCode.toInteger() : 1
+    return project.hasProperty('versionCode') ? versionCode.toInteger() : 2
 }
 
 def getVersionName = { ->
-    return project.hasProperty('versionName') ? versionName : "1.0.0"
+    return project.hasProperty('versionName') ? versionName : "1.1.0"
 }
 
 task(configureApp) {
