@@ -1,0 +1,17 @@
+os:
+  name: portal
+  version: 3
+  configurations:
+    mason-management:
+      disable_keyguard: true
+      disable_status_bar: false
+      direct_boot_package: com.trevorhalvorson.portal
+    mason-fota:
+      config_allow_download_over_metered: true
+      config_update_prompt_prior_to_install: false
+    mason-app-updater:
+      config_allow_download_over_metered: true
+apps:
+  - name: Portal
+    package_name: com.trevorhalvorson.portal
+    version_code: 3

@@ -15,7 +15,7 @@ jobs:
           command: echo 'export KEYSTORE=${HOME}/keystore.jks' >> $BASH_ENV
       - run:
           name: Build APK
-          command: ./gradlew build
+          command: ./gradlew clean build
       - run:
           name: Install Mason CLI
           command: sudo pip install git+https://git@github.com/MasonAmerica/mason-cli.git
@@ -25,3 +25,6 @@ jobs:
       - run:
           name: Register APK
           command: mason register -s apk ${HOME}/project/app/build/outputs/apk/release/app-release.apk
+      - run:
+          name: Register and build project
+          command: mason stage -s ${HOME}/project/.mason/project.yml
