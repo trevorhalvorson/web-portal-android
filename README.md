@@ -15,6 +15,10 @@ Build an unsigned release APK:
 
 `./gradlew assembleRelease -Purl='"https://trevorhalvorson.com"' -PallowBrowsing=true -PversionCode=1 -PversionName='1.0.0'`
 
+Build a signed release APK:
+
+`KEYSTORE=keystore.jks KEYSTORE_PASSWORD=password KEY_ALIAS=key0 KEY_PASSWORD=password ./gradlew assembleRelease -Purl='"https://trevorhalvorson.com"' -PallowBrowsing=true PversionCode=1 -PversionName='1.0.0'`
+
 ### Signing
 
 (optional) Generating a Keystore:
