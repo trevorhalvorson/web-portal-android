@@ -4,29 +4,34 @@ apply plugin: 'kotlin-android'
 
 apply plugin: 'kotlin-android-extensions'
 
-def props = project.getProperties()
-
-def url, allowBrowsing
+def getApplicationId = { ->
+    return project.hasProperty('applicationId') ? applicationId : "com.trevorhalvorson.portal"
+}
 
 def getVersionCode = { ->
-    return project.hasProperty('versionCode') ? versionCode.toInteger() : 3
+    return project.hasProperty('versionCode') ? versionCode.toInteger() : 1
 }
 
 def getVersionName = { ->
-    return project.hasProperty('versionName') ? versionName : "1.2.0"
+    return project.hasProperty('versionName') ? versionName : "1.0.0"
 }
+
+def props = project.getProperties()
+
+def url, allowBrowsing, toolbarTitle
 
 task(configureApp) {
     url = props.get("url")
     allowBrowsing = props.get("allowBrowsing")
+    toolbarTitle = props.get("toolbarTitle")
 }
 
 android {
     compileSdkVersion 28
     buildToolsVersion '28.0.3'
     defaultConfig {
-        applicationId "com.trevorhalvorson.portal"
-        minSdkVersion 21
+        applicationId getApplicationId()
+        minSdkVersion 23
         targetSdkVersion 28
         versionCode getVersionCode()
         versionName getVersionName()
@@ -48,10 +53,12 @@ android {
 
             buildConfigField("String", "URL", "$url")
             buildConfigField("Boolean", "ALLOW_BROWSING", "$allowBrowsing")
+            buildConfigField("String", "TOOLBAR_TITLE", "$toolbarTitle")
         }
         debug {
             buildConfigField("String", "URL", '"https://www.wikipedia.org/"')
             buildConfigField("Boolean", "ALLOW_BROWSING", "true")
+            buildConfigField("String", "TOOLBAR_TITLE", '"PORTAL DEBUG"')
         }
     }
     lintOptions {
@@ -64,4 +71,5 @@ android {
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation 'com.android.support:appcompat-v7:28.0.0'
 }
