@@ -92,6 +92,13 @@ class MainActivity : AppCompatActivity() {
 
                 return true
             }
+
+            override fun onConsoleMessage(consoleMessage: ConsoleMessage?): Boolean {
+                consoleMessage?.apply {
+                    Log.d("${TAG}: WebView", "${message()} -- From line ${lineNumber()} of ${sourceId()}")
+                }
+                return true
+            }
         }
 
         web_view.settings.javaScriptEnabled = true
