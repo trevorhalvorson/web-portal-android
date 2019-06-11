@@ -29,8 +29,7 @@ class MainActivity : AppCompatActivity() {
         private const val FILE_REQUEST_CODE = 2
         private const val AUTHORITY = BuildConfig.APPLICATION_ID + ".provider"
         private const val PHOTOS = "photos"
-        private val PERMISSIONS = arrayOf(Manifest.permission.INTERNET,
-                Manifest.permission.CAMERA,
+        private val PERMISSIONS = arrayOf(Manifest.permission.CAMERA,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE,
                 Manifest.permission.READ_EXTERNAL_STORAGE)
     }
@@ -109,11 +108,13 @@ class MainActivity : AppCompatActivity() {
             web_view.loadUrl(BuildConfig.URL)
         }
 
-        for (permission in PERMISSIONS) {
-            if (ContextCompat.checkSelfPermission(this, permission) !=
-                    PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(this, PERMISSIONS, PERMISSIONS_REQUEST_CODE)
-                break
+        if (BuildConfig.ALLOW_FILE_UPLOAD) {
+            for (permission in PERMISSIONS) {
+                if (ContextCompat.checkSelfPermission(this, permission) !=
+                        PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(this, PERMISSIONS, PERMISSIONS_REQUEST_CODE)
+                    break
+                }
             }
         }
     }

@@ -12,11 +12,12 @@ Project Properties:
 - `versionName`: Version name of the application.
 - `url`: The URL to load in the WebView
 - `allowBrowsing`: `true` if the user should be allowed to access hosts other than the given `url`'s host
+- `allowFileUpload`: `true` if the user should be allowed to access and upload files on the device through the WebView
 - `toolbarTitle`: Text shown in the toolbar above the WebView
 
 Build a signed release APK:
 
-`KEYSTORE=keystore.jks KEYSTORE_PASSWORD=password KEY_ALIAS=key0 KEY_PASSWORD=password ./gradlew assembleRelease -PapplicationId='com.trevorhalvorson.portal' -PversionCode=1 -PversionName='1.0.0' -Purl='"https://www.wikipedia.org/"' -PallowBrowsing=true -PtoolbarTitle='"Portal"'`
+`KEYSTORE=keystore.jks KEYSTORE_PASSWORD=password KEY_ALIAS=key0 KEY_PASSWORD=password ./gradlew assembleRelease -PapplicationId='com.trevorhalvorson.portal' -PversionCode=1 -PversionName='1.0.0' -Purl='"https://www.wikipedia.org/"' -PallowBrowsing=true -PallowFileUpload=false -PtoolbarTitle='"Portal"'`
 
 ### Self-Signing
 
