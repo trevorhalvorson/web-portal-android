@@ -93,10 +93,13 @@ class MainActivity : AppCompatActivity() {
             }
 
             override fun onConsoleMessage(consoleMessage: ConsoleMessage?): Boolean {
-                consoleMessage?.apply {
-                    Log.d("${TAG}: WebView", "${message()} -- From line ${lineNumber()} of ${sourceId()}")
+                if (BuildConfig.ENABLE_WEB_VIEW_LOGS && consoleMessage != null) {
+                    consoleMessage.apply {
+                        Log.i("$TAG-WebView", "${message()} -- From line ${lineNumber()} of ${sourceId()}")
+                    }
+                    return true
                 }
-                return true
+                return false
             }
         }
 
