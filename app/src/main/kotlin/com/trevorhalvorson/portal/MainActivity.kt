@@ -19,6 +19,8 @@ import java.io.File
 import android.support.v4.content.FileProvider
 import android.util.Log
 import android.view.KeyEvent
+import android.view.View.GONE
+import android.view.View.VISIBLE
 import android.webkit.*
 import android.widget.Toast
 
@@ -100,6 +102,10 @@ class MainActivity : AppCompatActivity() {
                     return true
                 }
                 return false
+            }
+
+            override fun onProgressChanged(view: WebView?, newProgress: Int) {
+                progress_bar.visibility = if (newProgress == 100) GONE else VISIBLE
             }
         }
 
