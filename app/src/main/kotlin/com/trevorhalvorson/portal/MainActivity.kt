@@ -59,6 +59,12 @@ class MainActivity : AppCompatActivity() {
                 }
                 return false
             }
+
+            override fun onReceivedError(view: WebView?, request: WebResourceRequest?, error: WebResourceError?) {
+                if (BuildConfig.ENABLE_WEB_VIEW_LOGS) {
+                    Log.e("$TAG-WebView", "${request?.url} error ${error?.errorCode}: ${error?.description}")
+                }
+            }
         }
 
         web_view.webChromeClient = object : WebChromeClient() {
