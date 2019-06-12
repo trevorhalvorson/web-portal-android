@@ -160,9 +160,16 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    override fun onSaveInstanceState(outState: Bundle?) {
+        super.onSaveInstanceState(outState)
+        web_view.saveState(outState)
+    }
+
     override fun onRestoreInstanceState(savedInstanceState: Bundle?) {
         super.onRestoreInstanceState(savedInstanceState)
-        web_view.restoreState(savedInstanceState)
+        if (web_view.restoreState(savedInstanceState) == null) {
+            web_view.loadUrl(BuildConfig.URL)
+        }
     }
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent): Boolean {
@@ -181,7 +188,7 @@ class MainActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when (item?.itemId) {
             R.id.refresh -> {
-                web_view.reload()
+                web_view.loadUrl(BuildConfig.URL)
                 return true
             }
         }
