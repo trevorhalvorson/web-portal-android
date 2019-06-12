@@ -22,6 +22,7 @@ def url, enableWebViewLogs, allowBrowsing, allowFileUpload, toolbarTitle
 
 task(configureApp) {
     url = props.get("url")
+    enableWebViewLogs = props.get("enableWebViewLogs")
     allowBrowsing = props.get("allowBrowsing")
     allowFileUpload = props.get("allowFileUpload")
     toolbarTitle = props.get("toolbarTitle")
