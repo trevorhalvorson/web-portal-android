@@ -18,11 +18,13 @@ def getVersionName = { ->
 
 def props = project.getProperties()
 
-def url, allowBrowsing, toolbarTitle
+def url, enableWebViewLogs, allowBrowsing, allowFileUpload, toolbarTitle
 
 task(configureApp) {
     url = props.get("url")
+    enableWebViewLogs = props.get("enableWebViewLogs")
     allowBrowsing = props.get("allowBrowsing")
+    allowFileUpload = props.get("allowFileUpload")
     toolbarTitle = props.get("toolbarTitle")
 }
 
@@ -52,12 +54,16 @@ android {
             signingConfig signingConfigs.release
 
             buildConfigField("String", "URL", "$url")
+            buildConfigField("Boolean", "ENABLE_WEB_VIEW_LOGS", "$enableWebViewLogs")
             buildConfigField("Boolean", "ALLOW_BROWSING", "$allowBrowsing")
+            buildConfigField("Boolean", "ALLOW_FILE_UPLOAD", "$allowFileUpload")
             buildConfigField("String", "TOOLBAR_TITLE", "$toolbarTitle")
         }
         debug {
             buildConfigField("String", "URL", '"https://www.wikipedia.org/"')
+            buildConfigField("Boolean", "ENABLE_WEB_VIEW_LOGS", "true")
             buildConfigField("Boolean", "ALLOW_BROWSING", "true")
+            buildConfigField("Boolean", "ALLOW_FILE_UPLOAD", "false")
             buildConfigField("String", "TOOLBAR_TITLE", '"PORTAL DEBUG"')
         }
     }

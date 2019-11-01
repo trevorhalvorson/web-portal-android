@@ -19,6 +19,8 @@ import java.io.File
 import android.support.v4.content.FileProvider
 import android.util.Log
 import android.view.KeyEvent
+import android.view.View.GONE
+import android.view.View.VISIBLE
 import android.webkit.*
 import android.widget.Toast
 
@@ -29,8 +31,7 @@ class MainActivity : AppCompatActivity() {
         private const val FILE_REQUEST_CODE = 2
         private const val AUTHORITY = BuildConfig.APPLICATION_ID + ".provider"
         private const val PHOTOS = "photos"
-        private val PERMISSIONS = arrayOf(Manifest.permission.INTERNET,
-                Manifest.permission.CAMERA,
+        private val PERMISSIONS = arrayOf(Manifest.permission.CAMERA,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE,
                 Manifest.permission.READ_EXTERNAL_STORAGE)
     }
@@ -57,6 +58,12 @@ class MainActivity : AppCompatActivity() {
                     return !originalHost!!.contentEquals(requestedHost)
                 }
                 return false
+            }
+
+            override fun onReceivedError(view: WebView?, request: WebResourceRequest?, error: WebResourceError?) {
+                if (BuildConfig.ENABLE_WEB_VIEW_LOGS) {
+                    Log.e("$TAG-WebView", "${request?.url} error ${error?.errorCode}: ${error?.description}")
+                }
             }
         }
 
@@ -92,6 +99,20 @@ class MainActivity : AppCompatActivity() {
 
                 return true
             }
+
+            override fun onConsoleMessage(consoleMessage: ConsoleMessage?): Boolean {
+                if (BuildConfig.ENABLE_WEB_VIEW_LOGS && consoleMessage != null) {
+                    consoleMessage.apply {
+                        Log.i("$TAG-WebView", "${message()} -- From line ${lineNumber()} of ${sourceId()}")
+                    }
+                    return true
+                }
+                return false
+            }
+
+            override fun onProgressChanged(view: WebView?, newProgress: Int) {
+                progress_bar.visibility = if (newProgress == 100) GONE else VISIBLE
+            }
         }
 
         web_view.settings.javaScriptEnabled = true
@@ -102,11 +123,13 @@ class MainActivity : AppCompatActivity() {
             web_view.loadUrl(BuildConfig.URL)
         }
 
-        for (permission in PERMISSIONS) {
-            if (ContextCompat.checkSelfPermission(this, permission) !=
-                    PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(this, PERMISSIONS, PERMISSIONS_REQUEST_CODE)
-                break
+        if (BuildConfig.ALLOW_FILE_UPLOAD) {
+            for (permission in PERMISSIONS) {
+                if (ContextCompat.checkSelfPermission(this, permission) !=
+                        PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(this, PERMISSIONS, PERMISSIONS_REQUEST_CODE)
+                    break
+                }
             }
         }
     }
@@ -152,9 +175,16 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    override fun onSaveInstanceState(outState: Bundle?) {
+        super.onSaveInstanceState(outState)
+        web_view.saveState(outState)
+    }
+
     override fun onRestoreInstanceState(savedInstanceState: Bundle?) {
         super.onRestoreInstanceState(savedInstanceState)
-        web_view.restoreState(savedInstanceState)
+        if (web_view.restoreState(savedInstanceState) == null) {
+            web_view.loadUrl(BuildConfig.URL)
+        }
     }
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent): Boolean {
@@ -173,7 +203,7 @@ class MainActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when (item?.itemId) {
             R.id.refresh -> {
-                web_view.reload()
+                web_view.loadUrl(BuildConfig.URL)
                 return true
             }
         }
